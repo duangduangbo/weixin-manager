@@ -72,9 +72,9 @@ export default {
   },
   computed: {
     ...mapState({
-      messageUnreadList: state => state.user.messageUnreadList,
-      messageReadedList: state => state.user.messageReadedList,
-      messageTrashList: state => state.user.messageTrashList,
+      messageUnreadList: state => state.admin.messageUnreadList,
+      messageReadedList: state => state.admin.messageReadedList,
+      messageTrashList: state => state.admin.messageTrashList,
       messageList () {
         return this[listDic[this.currentMessageType]]
       },

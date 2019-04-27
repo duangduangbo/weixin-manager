@@ -16,7 +16,7 @@
         </infor-card>
       </i-col>
     </Row>
-    <Row :gutter="20" style="margin-top: 10px;"  v-show="!isMain">
+    <Row :gutter="20" style="margin-top: 10px;"  v-show="isMain">
       <i-col :md="24" :lg="8" style="margin-bottom: 20px;">
         <Card shadow>
            <p slot="title">
@@ -54,6 +54,7 @@ import InforCard from '_c/info-card'
 import CountTo from '_c/count-to'
 import { ChartPie, ChartBar } from '_c/charts'
 import Example from './example.vue'
+import { mapActions } from 'vuex'
 export default {
   name: 'home',
   components: {
@@ -65,18 +66,15 @@ export default {
   },
   data () {
     return {
-      charList:["12",'12'],
+      charList:['暂无数据'],
       inforCardData: [
-        { title: '盈利数', icon: 'md-person-add', count: 803, color: '#2d8cf0' },
-        { title: '订单数', icon: 'md-locate', count: 232, color: '#19be6b' },
-        { title: '用户数', icon: 'md-help-circle', count: 142, color: '#ff9900' },
-        // { title: '分享统计', icon: 'md-share', count: 657, color: '#ed3f14' },
-        // { title: '新增互动', icon: 'md-chatbubbles', count: 12, color: '#E46CBB' },
-        // { title: '新增页面', icon: 'md-map', count: 14, color: '#9A66E4' }
+        { title: '盈利数', icon: 'md-person-add', count: 0, color: '#2d8cf0' },
+        { title: '订单数', icon: 'md-locate', count: 0, color: '#19be6b' },
+        { title: '用户数', icon: 'md-help-circle', count: 0, color: '#ff9900' },
       ],
       inforCardMain: [
-        { title: '总销量', icon: 'md-person-add', count: 803, color: '#2d8cf0' },
-        { title: '订单数', icon: 'md-locate', count: 232, color: '#19be6b' }
+        { title: '总销量', icon: 'md-person-add', count: 0, color: '#2d8cf0' },
+        { title: '订单数', icon: 'md-locate', count: 0, color: '#19be6b' }
       ],
       isMain:true,
       columns: [
@@ -97,36 +95,35 @@ export default {
                     key: 'address1'
                 }
             ],
-            data: [
-                {
-                    name: '王小明',
-                    age: 18,
-                    address: '北京市朝阳区芍药居',
-                    address2:'123231'
-                },
-                {
-                    name: '张小刚',
-                    age: 25,
-                    address: '北京市海淀区西二旗'
-                    ,address2:'123231'
-                },
-                {
-                    name: '李小红',
-                    age: 30,
-                    address: '上海市浦东新区世纪大道'
-                    ,address2:'123231'
-                },
-                {
-                    name: '周小伟',
-                    age: 26,
-                    address: '深圳市南山区深南大道'
-                    ,address2:'123231'
-                }
-            ]
+            data: []
     }
   },
   mounted () {
-    //
+    this.getHomeCount()
+  },
+  methods:{
+    ...mapActions([
+      'getHome'
+    ]),
+    getHomeCount(){
+      this.getHome().then(res=>{
+          console.log(res.data)
+          let keyword=res.data.keyword//关键词list
+          let salesDay=res.data.salesDay//销售量list
+          let salesHot=res.data.salesHot//热销情况list
+          let totalOrder=res.data.totalOrder//订单数int
+          let totalSales=res.data.totalSales//总销量int
+          if(this.$store.state.admin.isAdmin==1){
+            this.$set(this.inforCardMain[1],"count",totalOrder)
+            this.$set(this.inforCardMain[0],"count",totalSales)
+          }else{
+            this.$set(this.inforCardData[1],"count",totalOrder)
+            this.$set(this.inforCardData[0],"count",totalSales)
+            
+          }
+      })
+    }
+
   }
 }
 </script>

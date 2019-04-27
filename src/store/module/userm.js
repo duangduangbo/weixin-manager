@@ -2,7 +2,9 @@ import {
   listuser,
   removeuser,
   adduser,
-  updateuser
+  updateuser,
+  particulars,
+  
 } from '@/api/userm'
 import { setToken, getToken } from '@/libs/util'
 
@@ -31,6 +33,7 @@ export default {
       })
     },
     getremoveuser ({ state, commit },p) {
+      p={string:p,userToken:getToken()}
       return new Promise((resolve, reject) => {
         removeuser(p).then((res) => {
           let data=res.data
@@ -51,8 +54,23 @@ export default {
       })
     },
     getupdateuser ({ state, commit },p) {
+      p=Object.assign(p,{userToken:getToken()})
       return new Promise((resolve, reject) => {
         updateuser(p).then((res) => {
+          let data=res.data
+          resolve(data)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    getuserparticulars ({ state, commit },p) {
+      p={
+        userToken:getToken(),
+        string:p
+      }
+      return new Promise((resolve, reject) => {
+        particulars(p).then((res) => {
           let data=res.data
           resolve(data)
         }).catch(error => {

@@ -106,9 +106,6 @@
             <Cascader :data="dataClass" v-model="formValidate.classId"></Cascader>
         </FormItem>
         <FormItem label="是否上架">
-            <!-- <CheckboxGroup v-model="formValidate.online">
-                <Checkbox label="1">{{formValidate.online.length>0?'是':'否'}}</Checkbox>
-            </CheckboxGroup> -->
             <RadioGroup v-model="formValidate.online">
                 <Radio label="1">是</Radio>
                 <Radio label="0">否</Radio>
@@ -122,11 +119,7 @@
                 multiple
                 type="drag"
                 :before-upload="beforeUpload"
-                :format="['jpg','jpeg','png']"
-                :max-size="2048"
                 :disabled="disabled"
-                :on-format-error="handleFormatError"
-        :on-exceeded-size="handleMaxSize"
                 action="admin/commodity/sendpic">
                 <div style="padding: 20px 0">
                     <Icon v-show="imgurl==''" type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
@@ -147,7 +140,7 @@ import { mapActions,mapMutations } from 'vuex';
 import { setToken, getToken } from '@/libs/util'
 let formData = new FormData(); 
 export default {
-    name:"add_goods",
+    name:"update_goods",
      data () {
          
             return {
@@ -159,7 +152,6 @@ export default {
                     deposit:'',
                     price:'',
                     inventory:'',
-                    classId:[],
                     online:"1"
                 },
                 dataClass: [],
@@ -167,74 +159,87 @@ export default {
                 disabled:false,
                 formData:formData,
                 isAdmin:this.$store.state.admin.isAdmin,
-                id:this.$route.query.id,
-                valid:{
-                    price: [{ required: true, message: '必填', trigger: 'blur' }],
-                    price1: [{ required: true, message: '必填', trigger: 'blur' }],
-                    price2: [{ required: true, message: '必填', trigger: 'blur' }],
-                    price3: [{ required: true, message: '必填', trigger: 'blur' }],
-                    price4: [{ required: true, message: '必填', trigger: 'blur' }],
-                    price5: [{ required: true, message: '必填', trigger: 'blur' }],
-                    price6: [{ required: true, message: '必填', trigger: 'blur' }],
-                },
-                basic:{
-                    name: [{ required: true, message: '必填', trigger: 'blur' }],
-                    // classId: [{ required: true, message: '必填', trigger: 'blur' }],
-                    picurl: [{ required: true, message: '必填', trigger: 'blur' }],
-                    inventory: [{ required: true, message: '必填', trigger: 'blur' }],
-                    note: [{ required: true, message: '必填', trigger: 'blur' }],
-                },
-                 rentValid:{
-                    deposit: [{ required: true, message: '必填', trigger: 'blur' }],
-                     rentPrice: [{ required: true, message: '必填', trigger: 'blur' }],
-                    rentPrice1: [{ required: true, message: '必填', trigger: 'blur' }],
-                    rentPrice2: [{ required: true, message: '必填', trigger: 'blur' }],
-                    rentPrice3: [{ required: true, message: '必填', trigger: 'blur' }],
-                    rentPrice4: [{ required: true, message: '必填', trigger: 'blur' }],
-                    rentPrice5: [{ required: true, message: '必填', trigger: 'blur' }],
-                  rentPrice6: [{ required: true, message: '必填', trigger: 'blur' }],
-                }
+                id:this.$route.query.id
             }
         },
-        mounted(){
-            this.getData()
-            if(this.id!=null&this.id!=undefined)
-            this.getGoods()
-            else{
-            this.setForm()
-                this.formValidate={
-                    type:'1',
-                    classId:[],
-                    online:"1"
-                }
-            }
+        created(){
+
             console.log(this.isAdmin,this.$store.state.admin.isAdmin)
         },
+        mounted(){
+            // if(this.id!=null&this.id!=undefined)
+            this.getData()
+           
+            // else{
+            // this.setForm()
+            // this.formValidate={
+            //     type:'1',
+            //     classId:[],
+            //     online:"1"
+            // }
+            // }
+        },
+        watch:{
+        id:{
+            handler:function(newval){
+                 console.log(newval)
+                this.getData()
+                this.getGoods()
+            },
+            deep:true
+        }
+    },
         computed:{
+            
             ruleValidate(){
-                  
+                let valid={
+                    price: [{ required: true, message: '必填' }],
+                    price1: [{ required: true, message: '必填' }],
+                    price2: [{ required: true, message: '必填' }],
+                    price3: [{ required: true, message: '必填' }],
+                    price4: [{ required: true, message: '必填' }],
+                    price5: [{ required: true, message: '必填' }],
+                    price6: [{ required: true, message: '必填' }],
+                }
+                let basic={
+                    name: [{ required: true, message: '必填' }],
+                    classId: [{ required: true, message: '必填' }],
+                    picurl: [{ required: true, message: '必填' }],
+                    inventory: [{ required: true, message: '必填' }],
+                    note: [{ required: true, message: '必填' }],
+                }
+                let rentValid={
+                    deposit: [{ required: true, message: '必填' }],
+                     rentPrice: [{ required: true, message: '必填' }],
+                    rentPrice1: [{ required: true, message: '必填' }],
+                    rentPrice2: [{ required: true, message: '必填' }],
+                    rentPrice3: [{ required: true, message: '必填' }],
+                    rentPrice4: [{ required: true, message: '必填' }],
+                    rentPrice5: [{ required: true, message: '必填' }],
+                    rentPrice6: [{ required: true, message: '必填' }],
+                }
                 if(this.formValidate.type==1){
                     if(this.isAdmin)
-                    return Object.assign(this.basic,this.rentValid)
+                    return Object.assign(basic,rentValid)
                     else
-                    return Object.assign(this.basic,{
-                        rentPrice: [{ required: true, message: '必填', trigger: 'blur' }],
-                        deposit: [{ required: true, message: '必填', trigger: 'blur' }]
+                    return Object.assign(basic,{
+                        rentPrice: [{ required: true, message: '必填' }],
+                        deposit: [{ required: true, message: '必填' }]
                         })
                 }
                 if(this.formValidate.type==2){
                     if(this.isAdmin)
-                    return Object.assign(this.basic,this.valid)
+                    return Object.assign(basic,valid)
                     else
-                    return Object.assign(this.basic,{price: [{ required: true, message: '必填', trigger: 'blur' }]})
+                    return Object.assign(basic,{price: [{ required: true, message: '必填' }]})
                 }
                 if(this.formValidate.type==3){
                     if(this.isAdmin)
-                    return Object.assign(this.basic,this.rentValid,this.valid)
+                    return Object.assign(basic,rentValid,valid)
                     else
-                    return Object.assign(this.basic,{
-                        price: [{ required: true, message: '必填', trigger: 'blur' }],
-                        rentPrice: [{ required: true, message: '必填', trigger: 'blur' }],
+                    return Object.assign(basic,{
+                        price: [{ required: true, message: '必填' }],
+                        rentPrice: [{ required: true, message: '必填' }],
                         })
                 }
             },
@@ -244,34 +249,19 @@ export default {
         },
         methods: {
             ...mapActions([
-                'getaddcommodity',
+                'commodityupdate',
                 'getsendpic',
                 'getclasslist',
                 'getcommodityparticulars'
             ]),
-            handleMaxSize (file) {
-                this.$Notice.warning({
-                    title: '文件大小限制',
-                    desc: '文件  ' + file.name + ' 太大，上传不超过2M'
-                });
-            },
-            handleFormatError (file) {
-                this.$Notice.warning({
-                    title: '图片格式不正确',
-                    desc: '文件' + file.name + '格式不正确，请选择jpg，png，jpeg.'
-                });
-            },
             getGoods(){
                 this.getcommodityparticulars(this.id).then(res=>{
                     if(res.data){
-                            
                         this.formValidate=res.data
-                        this.formValidate.classId=[res.data.classId]
-                        // if(res.data.online==1)
-                        // this.formValidate.online=[res.data.online]
-                        // else
-                        // this.formValidate.online=[]
+                        this.formValidate.online=res.data.online.toString()
                         this.imgurl=res.data.picurl
+                           this.formValidate.classId=[res.data.kind,res.data.classId]
+                        console.log(this.formValidate.classId,this.dataClass)
                     }
                 })
             },
@@ -305,25 +295,25 @@ export default {
                     children: mechanical
                 }]
                 // mechanical agentia
+                 this.getGoods()
                 })
             },
             setForm(){
                 formData.append('pic',''); 
+                formData.append('id',this.id); 
                 formData.append('userToken',getToken()); 
                 formData.append('name',''); 
                 formData.append('type',''); 
-                formData.append('note','');
-                if(this.formValidate.type==2||this.formValidate.type==3){
-                    formData.append('price',''); 
-                    formData.append('price1',''); 
-                    formData.append('price2',''); 
-                    formData.append('price3',''); 
-                    formData.append('price4',''); 
-                    formData.append('price5',''); 
-                    formData.append('price6',''); 
-                }
-                if(this.formValidate.type==1||this.formValidate.type==3){
+                formData.append('note',''); 
                 formData.append('deposit',''); 
+                formData.append('inventory',''); 
+                formData.append('price',''); 
+                formData.append('price1',''); 
+                formData.append('price2',''); 
+                formData.append('price3',''); 
+                formData.append('price4',''); 
+                formData.append('price5',''); 
+                formData.append('price6',''); 
                 formData.append('rentPrice',''); 
                 formData.append('rentPrice1',''); 
                 formData.append('rentPrice2',''); 
@@ -331,19 +321,11 @@ export default {
                 formData.append('rentPrice4',''); 
                 formData.append('rentPrice5',''); 
                 formData.append('rentPrice6',''); 
-                } 
-                formData.append('inventory',''); 
                 formData.append('classId',''); 
                 formData.append('online',''); 
             },
             beforeUpload (file) {
-                if((file.size/(1024*1024))>2){
-                    this.$Notice.warning({
-                    title: '文件大小限制',
-                    desc: '文件  ' + file.name + ' 太大，上传不超过2M'
-                });
-                return false;
-                }
+                console.log(file)
                 const reader = new FileReader()
                 // reader.readAsDataURL(file)
                 reader.readAsArrayBuffer(file)
@@ -357,6 +339,7 @@ export default {
                         this.imgurl = url
                         this.disabled =true
                         this.formValidate.picurl=url
+                     
                     // this.getsendpic(formData).then(res=>{
                         
                     // })
@@ -366,6 +349,7 @@ export default {
             handleSubmit (name) {
                 this.$refs[name].validate((valid) => {
                     if (valid) {
+                        formData.append('id',this.id); 
                         formData.set('name',this.formValidate.name); 
                         formData.set('type',this.formValidate.type); 
                         formData.set('note',this.formValidate.note); 
@@ -386,12 +370,9 @@ export default {
                         formData.set('rentPrice5',this.formValidate.rentPrice5); 
                         formData.set('rentPrice6',this.formValidate.rentPrice6); 
                         formData.set('classId',this.formValidate.classId[1]); 
-                        formData.set('online',this.formValidate.online);  
-                        this.getaddcommodity(formData).then(res=>{
+                        formData.set('online',this.formValidate.online.length>0?1:0);  
+                        this.commodityupdate(formData).then(res=>{
                             if(res.code==1){
-                                this.imgurl=''
-                                this.disabled=false
-                                this.$refs['formValidate'].resetFields();
                                 this.$Message.success('Success!');
                             }
                         })

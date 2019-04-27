@@ -2,14 +2,18 @@
     <div>
         <i-table border  :columns="columns" :data="data">
             <template slot-scope="{ row, index }" slot="action">
-            <Button type="primary" size="small" style="margin-right: 5px" @click="show(index)">查看</Button>
-            <Button type="success" size="small" style="margin-right: 5px" @click="update(index)">修改</Button>
-            <Button type="error" size="small" @click="remove(index)">删除</Button>
+                <Button type="primary" size="small" style="margin-right: 5px" @click="show(row)">查看</Button>
+                <Button type="success" size="small" style="margin-right: 5px" @click="update(row)">修改</Button>
+                <Button type="error" size="small" style="margin-right: 5px" @click="remove(row)">删除</Button>
+                <Button v-show="row.authority==0" type="success" size="small" style="margin-right: 5px" @click="getAuthority(row)">授权</Button>
+                <Button v-show="row.authority==1"  type="error" size="small" @click="removeAuthority(row)">取消授权</Button>
             </template>
         </i-table>
     </div>
 </template>
 <script>
+import { mapActions } from 'vuex'
+import {getHour24} from '@/libs/util'
 export default {
     name:"distributor_list",
     data () {
@@ -18,7 +22,7 @@ export default {
             columns: [
                 {
                     title: '用户名',
-                    key: 'name',
+                    key: 'username',
                     render (h,params) {
                         return h('div', [
                                 h('Icon', {
@@ -32,78 +36,121 @@ export default {
                 },
                 {
                     title: '注册时间',
-                    key: 'age'
+                    key: 'addTime',
+                    render(h,params){
+                        return h('div',getHour24(params.row.addTime))
+                    }
                 },
                 {
                     title: '地区',
-                    key: 'address'
+                    key: 'address',
+                    render (h,params) {
+                        let str=params.row.province+params.row.city+params.row.address
+                        console.log(str)
+                        return h('div',str);
+                    }
                 },
                  {
-                    title: '订单数',
-                    key: 'address1'
+                    title: '购买订单数',
+                    key: 'orderNum'
+                },
+                {
+                    title: '租赁订单数',
+                    key: 'rentOrderNum'
+                },
+                 {
+                    title: '经销商店铺名',
+                    key: 'distributorName'
                 },
                  {
                     title: '归属经销商',
-                    key: 'address2'
+                    key: 'parent'
                 },
                 {
                     title: '经销商等级',
-                    key: 'address2'
+                    key: 'grade'
+                },
+                {
+                    title: '权限',
+                    key: 'authority',
+                    render (h,params) {
+                        let str=params.row.authority==1?"已授权":"未授权"
+                        console.log(str)
+                        return h('div',str);
+                    }
                 },
                 {
                     title: '操作',
                     key: 'action',
-                    width: 200,
+                    width: 250,
                     fixed:'right',
                     align: 'center',
                     slot:'action'
                 }
             ],
-            data: [
-                {
-                    name: '王小明',
-                    age: 18,
-                    address: '北京市朝阳区芍药居',
-                    address2:'123231'
-                },
-                {
-                    name: '张小刚',
-                    age: 25,
-                    address: '北京市海淀区西二旗'
-                    ,address2:'123231'
-                },
-                {
-                    name: '李小红',
-                    age: 30,
-                    address: '上海市浦东新区世纪大道'
-                    ,address2:'123231'
-                },
-                {
-                    name: '周小伟',
-                    age: 26,
-                    address: '深圳市南山区深南大道'
-                    ,address2:'123231'
-                }
-            ]
+            data: []
         }
     },
-    created(){
-        this.self=this;
-        console.log(this.self)
+    mounted(){
+        this.getDistributorList()
     },
     methods: {
-        show (index) {
-            this.$Modal.info({
-                title: 'User Info',
-                content: `Name：${this.data6[index].name}<br>Age：${this.data6[index].age}<br>Address：${this.data6[index].address}`
+        ...mapActions([
+            'getlistdistributor',
+            'getremovedistributor',
+            'getauthorize',
+            'removeauthorize'
+        ]),
+        getDistributorList(){
+            this.getlistdistributor().then(res=>{
+                this.data=res.data||[]
             })
         },
-        remove (index) {
-            this.data6.splice(index, 1);
+        show (row) {
+            this.$router.push({
+                path:'user_details',
+                name:'user_details',
+                query:{
+                    id:row.id,
+                    isUser:false
+                }
+            })
         },
-        update (index) {
-            console.log(index);
-        }
+        remove (row) {
+            console.log(row)
+            this.getremovedistributor(row.id).then(res=>{
+                if(rse.code==1){
+                    this.getDistributorList()
+                    this.$Message.success("Success!")
+                }
+            })
+        },
+        update (row) {
+            this.$router.push({
+                path:"update_distributor",
+                query:{
+                    id:row.id
+                }
+            })
+        },
+        getAuthority(row){
+            this.getauthorize(row.id).then(res=>{
+                if(res.code==1){
+                    this.getDistributorList()
+                    this.$Message.success("Success!")
+                }
+            })
+        },
+        removeAuthority(row){
+            this.removeauthorize(row.id).then(res=>{
+                console
+                if(res.code==1){
+                    this.getDistributorList()
+                    this.$Message.success("Success!")
+                }
+            })
+
+        },
     }
 }
 </script>

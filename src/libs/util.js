@@ -5,8 +5,13 @@ import { forEach, hasOneOf, objEqual } from '@/libs/tools'
 const { title, cookieExpires, useI18n } = config
 
 export const TOKEN_KEY = 'token'
-
+// 修改时间格式
+export const getHour24 = (val) => {
+  let time=new Date(Number(val)).toLocaleString("chinese",{hour12:false})
+  return time
+}
 export const setToken = (token) => {
+  console.log(token)
   Cookies.set(TOKEN_KEY, token, { expires: cookieExpires || 1 })
 }
 

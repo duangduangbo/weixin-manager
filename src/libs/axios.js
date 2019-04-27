@@ -23,6 +23,7 @@ class HttpRequest {
       baseURL: this.baseUrl,
       headers: {
         //
+        "Content-Type":"application/json"
       }
     }
     return config
@@ -49,11 +50,14 @@ class HttpRequest {
     instance.interceptors.response.use(res => {
       this.destroy(url)
       const { data, status } = res
-      console.log("respone",res)
       if(data.code>=1){
         return { data, status }
       }else if(data.code<1){
-        Message.warning(data.msg);
+        Message.warning({
+          content: data.msg,
+          duration: 10,
+          closable: true
+        });
       }
     }, error => {
       this.destroy(url)
@@ -74,7 +78,6 @@ class HttpRequest {
     const instance = axios.create()
     options = Object.assign(this.getInsideConfig(), options)
     this.interceptors(instance, options.url)
-    console.log(options)
     return instance(options)
   }
 }

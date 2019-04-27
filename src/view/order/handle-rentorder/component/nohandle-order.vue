@@ -1,10 +1,10 @@
 <template>
     <div>
-        <i-table border  :columns="columns" :data="data">
+        <i-table border  :columns="columns7" :data="data6">
             <template slot-scope="{ row, index }" slot="action">
-            <Button type="primary" size="small" style="margin-right: 5px" @click="show(row)">查看</Button>
-            <!-- <Button type="success" size="small" style="margin-right: 5px" @click="update(index)">修改</Button> -->
-            <!-- <Button type="error" size="small" @click="remove(row)">删除</Button> -->
+            <Button type="primary" size="small" style="margin-right: 5px" @click="show(row)">发货</Button>
+            <!-- <Button type="primary" size="small" style="margin-right: 5px" @click="removeShow(row)">取消发货</Button> -->
+            <!-- <Button type="error" size="small" @click="remove(row)">取消订单</Button> -->
             </template>
         </i-table>
     </div>
@@ -13,11 +13,10 @@
 import { mapActions } from 'vuex'
 import {getHour24} from '@/libs/util'
 export default {
-    name:"loan_order",
+    name:"nohandle_order",
     data () {
         return {
-            self:null,
-            columns: [
+            columns7: [
                 {
                     title: '商品名称',
                     key: 'commodityName'
@@ -34,24 +33,28 @@ export default {
                     key: 'ownerName'
                 },
                  {
-                    title: '地区',
+                    title: '地址',
                     key: 'addr'
                 },
                  {
                     title: '订单状态',
                     key: 'status'
                 },
+                  {
+                    title: '取消原因',
+                    key: 'reason'
+                },
                 {
                     title: '经销商',
                     key: 'distributorName'
                 },
                 {
-                    title: '金额',
-                    key: 'payMoney'
-                },
-                {
-                    title: '保证金',
-                    key: 'deposit'
+                    title: '支付状态',
+                    key: 'status',
+                    render (h,params) {
+                        let sta=Number(params.row.status)>=1?"已支付":"未支付"
+                        return h('div',sta);
+                    }
                 },
                 {
                     title: '订单数量',
@@ -60,39 +63,38 @@ export default {
                 {
                     title: '操作',
                     key: 'action',
-                    width: 200,
+                    width: 150,
                     fixed:'right',
                     align: 'center',
                     slot:'action'
                 }
             ],
-            data: []
+            data6: []
         }
     },
     mounted(){
-        this.getRentOrderList()
+        this.getNoOrder()
     },
     methods: {
         ...mapActions([
-            'getrentorderlist'
+            'getrentorderundo',
+            'getrentordersend'
         ]),
-        getRentOrderList(){
-            this.getrentorderlist().then(res=>{
-                this.data=res.data||[]
+        getNoOrder(){
+            this.getrentorderundo().then(res=>{
+                this.data6=res.data||[]
             })
         },
         show (row) {
-            this.$router.push({
-                path:'order_details',
-                name:'order_details',
-                query:{
-                    id:row.orderNumber,
-                    isLoan:true
-                }
+            this.getrentordersend(row.orderNumber).then(res=>{
+                this.getNoOrder()
             })
         },
-        remove (index) {
-            this.data6.splice(index, 1);
+        remove (row) {
+            this.$Modal.info({
+                title: 'User Info',
+                content: `Name：${this.data6[index].name}<br>Age：${this.data6[index].age}<br>Address：${this.data6[index].address}`
+            })
         }
     }
 }

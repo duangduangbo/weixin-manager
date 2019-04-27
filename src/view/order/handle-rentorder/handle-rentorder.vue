@@ -15,7 +15,7 @@ import noHandle from "./component/nohandle-order"
 import yesHandle from "./component/yeshandle-order"
 import { mapActions } from 'vuex';
 export default {
-    name:"handle_order",
+    name:"handle_rentorder",
     components:{
         noHandle,
         yesHandle

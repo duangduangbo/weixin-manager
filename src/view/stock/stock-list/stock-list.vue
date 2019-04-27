@@ -1,10 +1,13 @@
 <template>
+
     <div>
         <i-table border  :columns="columns" :data="data">
         </i-table>
     </div>
 </template>
 <script>
+import { mapActions } from 'vuex';
+import { getHour24 } from '@/libs/util'
 export default {
     name:"stock_list",
     data () {
@@ -17,7 +20,10 @@ export default {
                 },
                 {
                     title: '上架时间',
-                    key: 'age'
+                    key: 'age',
+                    render: (h, params) => {
+                            return h('div', getHour24(params.row.address2))
+                        }
                 },
                 {
                     title: '归属经销商',
@@ -37,40 +43,20 @@ export default {
                         }
                 }
             ],
-            data: [
-                {
-                    name: '王小明',
-                    age: 18,
-                    address: '北京市朝阳区芍药居',
-                    address2:22
-                },
-                {
-                    name: '张小刚',
-                    age: 25,
-                    address: '北京市海淀区西二旗'
-                    ,address2:2
-                },
-                {
-                    name: '李小红',
-                    age: 30,
-                    address: '上海市浦东新区世纪大道'
-                    ,address2:3
-                },
-                {
-                    name: '周小伟',
-                    age: 26,
-                    address: '深圳市南山区深南大道'
-                    ,address2:33
-                }
-            ]
+            data: []
         }
     },
-    created(){
-        this.self=this;
+    mounted(){
+        this.getData()
         console.log(this.self)
     },
     methods: {
-      
+      ...mapActions(['getinventoryWarning']),
+      getData(){
+          this.getinventoryWarning().then(res=>{
+                this.data=res.data
+          })
+      }
     }
 }
 </script>

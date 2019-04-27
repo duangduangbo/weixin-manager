@@ -1,16 +1,17 @@
 <template>
     <div>
-        <i-table border  :columns="columns" :data="data">
+        <i-table border  :columns="columns" :data="userdata">
             <template slot-scope="{ row, index }" slot="action">
-            <Button type="primary" size="small" style="margin-right: 5px" @click="show(index)">查看</Button>
-            <Button type="success" size="small" style="margin-right: 5px" @click="update(index)">修改</Button>
-            <Button type="error" size="small" @click="remove(index)">删除</Button>
+            <Button type="primary" size="small" style="margin-right: 5px" @click="show(row)">查看</Button>
+            <!-- <Button type="success" size="small" style="margin-right: 5px" @click="update(row)">修改</Button> -->
+            <Button type="error" size="small" @click="remove(row)">删除</Button>
             </template>
         </i-table>
     </div>
 </template>
 <script>
 import {mapActions} from 'vuex'
+import { getHour24 } from '@/libs/util'
 export default {
     name:"user_list",
     data () {
@@ -19,7 +20,7 @@ export default {
             columns: [
                 {
                     title: '用户名',
-                    key: 'name',
+                    key: 'nikeName',
                     render (h,params) {
                         return h('div', [
                                 h('Icon', {
@@ -27,25 +28,28 @@ export default {
                                         type: 'md-person'
                                     }
                                 }),
-                                h('strong', params.row.name)
+                                h('strong', params.row.nikeName)
                             ]);
                     }
                 },
                 {
                     title: '注册时间',
-                    key: 'age'
+                    key: 'addTime',
+                    render (h,params) {
+                        return h('div', getHour24(params.row.addTime));
+                    }
                 },
                 {
                     title: '地区',
-                    key: 'address'
+                    key: 'alladdress'
                 },
                  {
                     title: '订单数',
-                    key: 'address1'
+                    key: 'totalOrderNum'
                 },
                  {
                     title: '归属经销商',
-                    key: 'address2'
+                    key: 'distributor'
                 },
                 {
                     title: '操作',
@@ -56,32 +60,7 @@ export default {
                     slot:'action'
                 }
             ],
-            data: [
-                {
-                    name: '王小明',
-                    age: 18,
-                    address: '北京市朝阳区芍药居',
-                    address2:'123231'
-                },
-                {
-                    name: '张小刚',
-                    age: 25,
-                    address: '北京市海淀区西二旗'
-                    ,address2:'123231'
-                },
-                {
-                    name: '李小红',
-                    age: 30,
-                    address: '上海市浦东新区世纪大道'
-                    ,address2:'123231'
-                },
-                {
-                    name: '周小伟',
-                    age: 26,
-                    address: '深圳市南山区深南大道'
-                    ,address2:'123231'
-                }
-            ]
+            userdata:[]
         }
     },
     created(){
@@ -89,24 +68,55 @@ export default {
         console.log(this.self)
     },
     mounted(){
-        this.getlistuser().then(res=>{
-            console.log(res)
-        })
+        this.getUserList()
     },
     methods: {
         ...mapActions([
-            'getlistuser'
+            'getlistuser',
+            'getremoveuser'
         ]),
-        show (index) {
-            this.$router.push({
-                path:'user_details'
+        getUserList(){
+            this.getlistuser().then(res=>{
+                if(res.data){
+
+                for(let i=0;i<res.data.length;i++){
+                    res.data[i].alladdress = (res.data[i].province||'')
+                                            + (res.data[i].city||'') 
+                                            + (res.data[i].address||'')
+                }
+                }
+                
+                this.userdata = res.data||[]
             })
         },
-        remove (index) {
-            this.data6.splice(index, 1);
+        show (row) {
+            this.$router.push({
+                path:'user_details',
+                name:'user_details',
+                query:{
+                    id:row.id,
+                    isUser:true
+                },
+                params:{
+                    data:row,
+                }
+            })
         },
-        update(index){
-            alert(index);
+        remove (row) {
+            this.getremoveuser(row.id).then(res=>{
+                if(res.code==1){
+                    this.getUserList()
+                    this.$Message.success('Success!');
+                }
+            })
+        },
+        update(row){
+            this.$router.push({
+                path:"add_distributor",
+                query:{
+                    id:row.id
+                }
+            })
         }
     }
 }

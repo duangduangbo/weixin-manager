@@ -2,14 +2,16 @@
     <div>
         <i-table border  :columns="columns" :data="data">
             <template slot-scope="{ row, index }" slot="action">
-            <Button type="primary" size="small" style="margin-right: 5px" @click="show(index)">查看</Button>
+            <Button type="primary" size="small" style="margin-right: 5px" @click="show(row)">查看</Button>
             <!-- <Button type="success" size="small" style="margin-right: 5px" @click="update(index)">修改</Button> -->
-            <Button type="error" size="small" @click="remove(index)">删除</Button>
+            <!-- <Button type="error" size="small" @click="remove(row)">删除</Button> -->
             </template>
         </i-table>
     </div>
 </template>
 <script>
+import { mapActions } from 'vuex'
+import {getHour24} from '@/libs/util'
 export default {
     name:"sell_order",
     data () {
@@ -18,31 +20,38 @@ export default {
             columns: [
                 {
                     title: '商品名称',
-                    key: 'name'
+                    key: 'commodityName'
                 },
                 {
                     title: '日期',
-                    key: 'age'
+                    key: 'payOrdertime',
+                    render(h,params){
+                        return h('div',getHour24(params.row.payOrdertime))
+                    }
                 },
                 {
                     title: '购买人',
-                    key: 'address'
+                    key: 'ownerName'
                 },
                  {
-                    title: '地区',
-                    key: 'address1'
+                    title: '地址',
+                    key: 'addr'
                 },
                  {
-                    title: '分类',
-                    key: 'address2'
+                    title: '订单状态',
+                    key: 'status'
                 },
                 {
                     title: '经销商',
-                    key: 'address2'
+                    key: 'distributorName'
                 },
                 {
                     title: '金额',
-                    key: 'address2'
+                    key: 'payMoney'
+                },
+                {
+                    title: '订单数量',
+                    key: 'count'
                 },
                 {
                     title: '操作',
@@ -53,45 +62,32 @@ export default {
                     slot:'action'
                 }
             ],
-            data: [
-                {
-                    name: '王小明',
-                    age: 18,
-                    address: '北京市朝阳区芍药居',
-                    address2:'123231'
-                },
-                {
-                    name: '张小刚',
-                    age: 25,
-                    address: '北京市海淀区西二旗'
-                    ,address2:'123231'
-                },
-                {
-                    name: '李小红',
-                    age: 30,
-                    address: '上海市浦东新区世纪大道'
-                    ,address2:'123231'
-                },
-                {
-                    name: '周小伟',
-                    age: 26,
-                    address: '深圳市南山区深南大道'
-                    ,address2:'123231'
-                }
-            ]
+            data: []
         }
     },
-    created(){
-        this.self=this;
-        console.log(this.self)
+    mounted(){
+        this.getOrderList()
     },
     methods: {
-        show (index) {
-            this.$router.push({
-                path:'order_details'
+        ...mapActions([
+            'getlistorder'
+        ]),
+        getOrderList(){
+            this.getlistorder().then(res=>{
+                this.data=res.data||[]
             })
         },
-        remove (index) {
+        show (row) {
+            this.$router.push({
+                path:'order_details',
+                name:'order_details',
+                query:{
+                    id:row.orderNumber,
+                    isLoan:false
+                }
+            })
+        },
+        remove (row) {
             this.data6.splice(index, 1);
         }
     }

@@ -24,9 +24,9 @@
             <tags-nav :value="$route" @input="handleClick" :list="tagNavList" @on-close="handleCloseTag"/>
           </div>
           <Content class="content-wrapper">
-            <keep-alive :include="cacheList">
+            <!-- <keep-alive :include="cacheList"> -->
               <router-view/>
-            </keep-alive>
+            <!-- </keep-alive> -->
             <ABackTop :height="100" :bottom="80" :right="50" container=".content-wrapper"></ABackTop>
           </Content>
         </Layout>
@@ -80,7 +80,7 @@ export default {
       return this.$store.state.app.tagRouter
     },
     userAvatar () {
-      return this.$store.state.user.avatarImgPath
+      return this.$store.state.admin.avatarImgPath
     },
     cacheList () {
       const list = ['ParentView', ...this.tagNavList.length ? this.tagNavList.filter(item => !(item.meta && item.meta.notCache)).map(item => item.name) : []]
@@ -96,7 +96,7 @@ export default {
       return this.$store.state.app.hasReadErrorPage
     },
     unreadCount () {
-      return this.$store.state.user.unreadCount
+      return this.$store.state.admin.unreadCount
     }
   },
   methods: {
@@ -109,7 +109,7 @@ export default {
       'closeTag'
     ]),
     ...mapActions([
-      'getUnreadMessageCount'
+      // 'getUnreadMessageCount'
     ]),
     turnToPage (route) {
       let { name, params, query } = {}
@@ -180,7 +180,7 @@ export default {
       })
     }
     // 获取未读消息条数
-    this.getUnreadMessageCount()
+    // this.getUnreadMessageCount()
   }
 }
 </script>

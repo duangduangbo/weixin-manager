@@ -1,16 +1,27 @@
 <template>
     <div>
-        <div class="goods-list-table">
+        <!-- <div class="goods-list-table">
         名称：
                 <Input placeholder="请输入搜索内容" style="width: auto">
                     <Icon type="ios-search" slot="suffix" />
                 </Input>
-        </div>
+        </div> -->
         <i-table border  :columns="columns7" :data="data6">
             <template slot-scope="{ row, index }" slot="action">
-            <Button type="primary" size="small" style="margin-right: 5px" @click="show(index)">查看</Button>
-            <Button type="success" size="small" style="margin-right: 5px"  @click="update(index)">修改</Button>
-            <Button type="error" size="small" @click="remove(index)">删除</Button>
+            <Button type="primary" size="small" style="margin-right: 5px" @click="show(row)">查看</Button>
+            <Button type="success" size="small" style="margin-right: 5px"  @click="update(row)">修改</Button>
+            <Button type="error" size="small" @click="remove(row)">删除</Button>
+            </template>
+            <template slot-scope="{ row, index }" slot="goodsPic">
+                <Avatar shape="square" src="row.picurl" size="large" />
+            </template>
+            <template slot-scope="{ row, index }" slot="goodsUpOrDown">
+                <i-switch v-model="row.online" :value="row.online" true-value="1" false-value="0" @on-change="addGoods(row)" >
+                    <Icon type="md-checkmark" slot="open"></Icon>
+                    <Icon type="md-close" slot="close"></Icon>
+                </i-switch>
+                <!-- <Button type="primary" size="small" style="margin-right: 5px" @click="goodsUp(row)">上架</Button>
+                <Button type="success" size="small" style="margin-right: 5px"  @click="goodsDown(row)">下架</Button> -->
             </template>
         </i-table>
     </div>
@@ -25,35 +36,71 @@ export default {
             columns7: [
                 {
                     title: '图片',
-                    key: 'name'
+                    key: 'picurl',
+                    width: 60,
+                    slot:'goodsPic'
                 },
                 {
                     title: '名称',
-                    key: 'age'
+                    key: 'name'
+                },
+                 {
+                    title: '商品类型',
+                    key: 'type'
                 },
                 {
-                    title: '价格',
-                    key: 'address'
+                    title: '购买价格',
+                    key: 'price'
+                },
+                {
+                    title: '租赁价格',
+                    key: 'rentPrice'
+                },
+                {
+                    title: '押金',
+                    key: 'deposit'
+                },
+                {
+                    title: '订单总数量',
+                    key: 'ordernumTotal'
                 },
                  {
                     title: '订单月数量',
-                    key: 'address'
+                    key: 'ordernumMouth'
                 },
                  {
                     title: '订单日数量',
-                    key: 'address'
-                },
-                 {
-                    title: '商品描述',
-                    key: 'address'
+                    key: 'ordernumDay'
                 },
                  {
                     title: '分类',
-                    key: 'address'
+                    key: 'classStr'
+                },
+                 {
+                    title: '库存',
+                    key: 'inventory'
                 },
                 {
                     title: '上/下架',
-                    key: 'address'
+                    key: 'online',
+                    width:120,
+                    // slot:"goodsUpOrDown",
+                    render: (h, params) => {  // 重点
+                        let _this = this
+                        return h('i-switch', {  //按钮的话是：button自行替换
+                          props: {  //这里可以设置它的属性
+                              value: params.row.online==1?true:false,     //设置它的值比如：true或false
+                              },
+                              on: { //操作事件
+                                input: function (event) {  //这里会起到监听的作用
+                                  if (event) { params.row.online = true } else { params.row.online = false }
+                                  },
+                                  'on-change': function () { //值发生了改变调用方法
+                                       _this.addGoods(params.row) // 方法自定义
+                                  }
+                              }
+                        })
+                      }
                 },
                 {
                     title: '操作',
@@ -64,47 +111,71 @@ export default {
                     slot:'action'
                 }
             ],
-            data6: [
-                {
-                    name: '王小明',
-                    age: 18,
-                    address: '北京市朝阳区芍药居'
-                },
-                {
-                    name: '张小刚',
-                    age: 25,
-                    address: '北京市海淀区西二旗'
-                },
-                {
-                    name: '李小红',
-                    age: 30,
-                    address: '上海市浦东新区世纪大道'
-                },
-                {
-                    name: '周小伟',
-                    age: 26,
-                    address: '深圳市南山区深南大道'
-                }
-            ]
+            data6: []
         }
     },
-    created(){
-        this.self=this;
-        console.log(this.self)
+    mounted(){
+        this.getGoodsList()
     },
     methods: {
-        
-        show (index) {
-            this.$Modal.info({
-                title: 'User Info',
-                content: `Name：${this.data6[index].name}<br>Age：${this.data6[index].age}<br>Address：${this.data6[index].address}`
+        ...mapActions([
+            'getlistcommodity',
+            'getremovecommodity',
+            'getcommodityonline',
+            'getcommoditydownline'
+        ]),
+        // 查询商品列表
+        getGoodsList(){
+            this.getlistcommodity().then(res=>{
+                console.log(res.data)
+                this.data6=res.data||[]
             })
         },
-        remove (index) {
-            this.data6.splice(index, 1);
+        // 查看商品详情
+        show (row) {
+           this.$router.push({
+                path:"goods_details",
+                query:{
+                    id:row.id
+                }
+            })
         },
-         update (index) {
-            this.data6.splice(index, 1);
+        // 删除商品
+        remove (row) {
+            this.getremovecommodity(row.id).then(res=>{
+                if(res.code==1){
+                    this.getGoodsList()
+                }
+            })
+        },
+        // 更新商品
+         update (row) {
+            this.$router.push({
+                path:"update_goods",
+                query:{
+                    id:row.id
+                }
+            })
+        },
+        // 上架
+        goodsUp(row){
+
+        },
+        // 下架
+        goodsDown(row){
+            
+        },
+        addGoods(row){
+            console.log(row)
+            if(row.online){
+                this.getcommodityonline(row.id).then(res=>{
+                    this.getGoodsList()
+                })
+            }else{
+                this.getcommoditydownline(row.id).then(res=>{
+                    this.getGoodsList()
+                })
+            }
         }
     }
 }

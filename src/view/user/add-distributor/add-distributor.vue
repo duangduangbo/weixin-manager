@@ -85,14 +85,14 @@ export default {
                     username:'',
                     realname:'',
                     distributorName:'',
-                    authority:'0',
+                    authority:0,
                     password: '',
-                    sex:'0',
+                    sex:0,
                     phone:'',
                     address:'',
                     province:'',
                     city:'',
-                    parent:'0',
+                    parent:0,
                     grade:''
                 },
                 ruleValidate: {
@@ -100,8 +100,10 @@ export default {
                     password: [{ required: true, message: '必填', trigger: 'blur' }],
                     phone:[{ required: true, message: '必填', trigger: 'blur' }],
                     address:[{ required: true, message: '必填', trigger: 'blur' }],
-                    parent:[ { required: true, message: '必填', trigger: 'blur' } ],
-                    grade:[{ required: true, message: '必填', trigger: 'blur' }],
+                    parent:[ {type:"number", required: true, message: '必填', trigger: 'blur'
+                     ,transform(val){return Number(val)}} ],
+                    grade:[{type:"number", required: true, message: '必填', trigger: 'blur'
+                    ,transform(val){return Number(val) }}],
                     city:[{ required: true, message: '必填', trigger: 'blur' }],
                     province:[{ required: true, message: '必填', trigger: 'blur' }],
                     distributorName:[{ required: true, message: '必填', trigger: 'blur' }],
@@ -120,9 +122,9 @@ export default {
                 })
             }else{
                 this.formValidate={
-                    authority:'0',
-                    sex:'0',
-                    parent:'0',
+                    authority:0,
+                    sex:0,
+                    parent:0,
                 }
             }
         },
@@ -153,6 +155,7 @@ export default {
                         else{
                                 this.getadddistributor(this.formValidate).then(res=>{
                                 this.$Message.success('Success!');
+                                this.handleReset('formValidate')
                             })
                         }
                     } else {

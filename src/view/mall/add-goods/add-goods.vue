@@ -119,7 +119,6 @@
         </FormItem>
         <FormItem label="图片" prop="picurl">
             <Upload
-                multiple
                 type="drag"
                 :before-upload="beforeUpload"
                 :format="['jpg','jpeg','png']"
@@ -132,8 +131,10 @@
                     <Icon v-show="imgurl==''" type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
                     <p v-show="imgurl==''" >点击上传图片</p>
                     <img  v-show="imgurl!=''" :src="imgurl" style="height:100px"/>
-                    <Icon v-show="imgurl!=''" class="resetimg" @click.prevent="resetImg" type="md-close" />
+                    <Icon v-show="imgurl!=''" class="resetimg" @click.prevent.default="resetImg" type="md-close" />
+                
                 </div>
+                <Input v-model="formValidate.picurl" style="width: 120px;margin-top:24px;display:none"></Input>
             </Upload>
         </FormItem>
         <FormItem>
@@ -179,8 +180,8 @@ export default {
                 },
                 basic:{
                     name: [{ required: true, message: '必填', trigger: 'blur' }],
-                    // classId: [{ required: true, message: '必填', trigger: 'blur' }],
-                    picurl: [{ required: true, message: '必填', trigger: 'blur' }],
+                    classId: [{ required: true, message: '必填', trigger: 'blur',type:"array" }],
+                    picurl: [{ required: true, message: '必填' }],
                     inventory: [{ required: true, message: '必填', trigger: 'blur' }],
                     note: [{ required: true, message: '必填', trigger: 'blur' }],
                 },
@@ -208,31 +209,29 @@ export default {
                     online:"1"
                 }
             }
-            console.log(this.isAdmin,this.$store.state.admin.isAdmin)
         },
         computed:{
             ruleValidate(){
-                  
                 if(this.formValidate.type==1){
                     if(this.isAdmin)
-                    return Object.assign(this.basic,this.rentValid)
+                    return Object.assign({},this.basic,this.rentValid)
                     else
-                    return Object.assign(this.basic,{
+                    return Object.assign({},this.basic,{
                         rentPrice: [{ required: true, message: '必填', trigger: 'blur' }],
                         deposit: [{ required: true, message: '必填', trigger: 'blur' }]
                         })
                 }
                 if(this.formValidate.type==2){
                     if(this.isAdmin)
-                    return Object.assign(this.basic,this.valid)
+                    return Object.assign({},this.basic,this.valid)
                     else
-                    return Object.assign(this.basic,{price: [{ required: true, message: '必填', trigger: 'blur' }]})
+                    return Object.assign({},this.basic,{price: [{ required: true, message: '必填', trigger: 'blur' }]})
                 }
                 if(this.formValidate.type==3){
                     if(this.isAdmin)
-                    return Object.assign(this.basic,this.rentValid,this.valid)
+                    return Object.assign({},this.basic,this.rentValid,this.valid)
                     else
-                    return Object.assign(this.basic,{
+                    return Object.assign({},this.basic,{
                         price: [{ required: true, message: '必填', trigger: 'blur' }],
                         rentPrice: [{ required: true, message: '必填', trigger: 'blur' }],
                         })
@@ -278,6 +277,7 @@ export default {
             resetImg(){
                 this.imgurl=""
                 this.disabled=false
+                this.formValidate.picurl=""
             },
             getData(){
                 this.getclasslist().then(res=>{
@@ -296,11 +296,11 @@ export default {
                     }
                     console.log(mechanical)
                     this.dataClass=[{
-                    value: '1',
+                    value: 1,
                     label: '园林药剂',
                     children: agentia
                 },{
-                    value: '2',
+                    value: 2,
                     label: '电动机械',
                     children: mechanical
                 }]
@@ -366,25 +366,31 @@ export default {
             handleSubmit (name) {
                 this.$refs[name].validate((valid) => {
                     if (valid) {
+                       // setForm()
                         formData.set('name',this.formValidate.name); 
                         formData.set('type',this.formValidate.type); 
                         formData.set('note',this.formValidate.note); 
                         formData.set('deposit',this.formValidate.deposit); 
-                        formData.set('inventory',this.formValidate.inventory); 
-                        formData.set('price',this.formValidate.price); 
-                        formData.set('price1',this.formValidate.price1); 
-                        formData.set('price2',this.formValidate.price2); 
-                        formData.set('price3',this.formValidate.price3); 
-                        formData.set('price4',this.formValidate.price4); 
-                        formData.set('price5',this.formValidate.price5); 
-                        formData.set('price6',this.formValidate.price6); 
-                        formData.set('rentPrice',this.formValidate.rentPrice); 
-                        formData.set('rentPrice1',this.formValidate.rentPrice1); 
-                        formData.set('rentPrice2',this.formValidate.rentPrice2); 
-                        formData.set('rentPrice3',this.formValidate.rentPrice3); 
-                        formData.set('rentPrice4',this.formValidate.rentPrice4); 
-                        formData.set('rentPrice5',this.formValidate.rentPrice5); 
-                        formData.set('rentPrice6',this.formValidate.rentPrice6); 
+                        formData.set('inventory',this.formValidate.inventory);
+                        if(this.formValidate.type==2||this.formValidate.type==3){
+                        
+                            formData.set('price',this.formValidate.price); 
+                            formData.set('price1',this.formValidate.price1); 
+                            formData.set('price2',this.formValidate.price2); 
+                            formData.set('price3',this.formValidate.price3); 
+                            formData.set('price4',this.formValidate.price4); 
+                            formData.set('price5',this.formValidate.price5); 
+                            formData.set('price6',this.formValidate.price6); 
+                        } 
+                        if(this.formValidate.type==1||this.formValidate.type==3){
+                            formData.set('rentPrice',this.formValidate.rentPrice); 
+                            formData.set('rentPrice1',this.formValidate.rentPrice1); 
+                            formData.set('rentPrice2',this.formValidate.rentPrice2); 
+                            formData.set('rentPrice3',this.formValidate.rentPrice3); 
+                            formData.set('rentPrice4',this.formValidate.rentPrice4); 
+                            formData.set('rentPrice5',this.formValidate.rentPrice5); 
+                            formData.set('rentPrice6',this.formValidate.rentPrice6); 
+                        } 
                         formData.set('classId',this.formValidate.classId[1]); 
                         formData.set('online',this.formValidate.online);  
                         this.getaddcommodity(formData).then(res=>{

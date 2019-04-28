@@ -18,27 +18,31 @@ export default {
                     title: '商品',
                     key: 'name'
                 },
-                {
-                    title: '上架时间',
-                    key: 'age',
-                    render: (h, params) => {
-                            return h('div', getHour24(params.row.address2))
-                        }
-                },
+                // {
+                //     title: '上架时间',
+                //     key: 'age',
+                //     render: (h, params) => {
+                //             return h('div', getHour24(params.row.address2))
+                //         }
+                // },
                 {
                     title: '归属经销商',
-                    key: 'address'
+                    key: 'distributor'
+                },
+                {
+                    title: '分类',
+                    key: 'classStr'
                 },
                  {
                     title: '库存数',
-                    key: 'address2',
+                    key: 'inventory',
                     render: (h, params) => {
                             return h('div', [
                                 h('strong',{
                                     style:{
-                                        color:Number(params.row.address2)<10? 'red':'' 
+                                        color:Number(params.row.inventory)<10? 'red':'' 
                                     }
-                                }, params.row.address2)
+                                }, params.row.inventory)
                             ]);
                         }
                 }

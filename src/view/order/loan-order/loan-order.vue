@@ -2,7 +2,7 @@
     <div>
         <i-table border  :columns="columns" :data="data">
             <template slot-scope="{ row, index }" slot="action">
-            <Button type="primary" size="small" style="margin-right: 5px" @click="show(row)">查看</Button>
+            <Button shape="circle" icon="md-eye" style="margin-right: 5px" @click="show(row)"></Button>
             <!-- <Button type="success" size="small" style="margin-right: 5px" @click="update(index)">修改</Button> -->
             <!-- <Button type="error" size="small" @click="remove(row)">删除</Button> -->
             </template>
@@ -41,9 +41,13 @@ export default {
                     title: '订单状态',
                     key: 'status'
                 },
+                // {
+                //     title: '经销商',
+                //     key: 'distributorName'
+                // },
                 {
-                    title: '经销商',
-                    key: 'distributorName'
+                    title: '经销商ID',
+                    key: 'distributorID'
                 },
                 {
                     title: '金额',
@@ -60,7 +64,7 @@ export default {
                 {
                     title: '操作',
                     key: 'action',
-                    width: 200,
+                    width: 100,
                     fixed:'right',
                     align: 'center',
                     slot:'action'

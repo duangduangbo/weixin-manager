@@ -45,6 +45,10 @@ export default {
                     key: 'reason'
                 },
                 {
+                    title: '经销商ID',
+                    key: 'distributorID'
+                },
+                {
                     title: '经销商',
                     key: 'distributorName'
                 },

@@ -8,12 +8,12 @@
         </div> -->
         <i-table border  :columns="columns7" :data="data6">
             <template slot-scope="{ row, index }" slot="action">
-            <Button type="primary" size="small" style="margin-right: 5px" @click="show(row)">查看</Button>
-            <Button type="success" size="small" style="margin-right: 5px"  @click="update(row)">修改</Button>
-            <Button type="error" size="small" @click="remove(row)">删除</Button>
+            <Button  shape="circle" icon="md-eye" style="margin-right: 5px" @click="show(row)"></Button>
+            <Button  shape="circle" icon="ios-create" style="margin-right: 5px"  @click="update(row)"></Button>
+            <Button  shape="circle" icon="md-trash" @click="remove(row)"></Button>
             </template>
             <template slot-scope="{ row, index }" slot="goodsPic">
-                <Avatar shape="square" src="row.picurl" size="large" />
+                <Avatar shape="square" :src="row.picurl" size="large" />
             </template>
             <template slot-scope="{ row, index }" slot="goodsUpOrDown">
                 <i-switch v-model="row.online" :value="row.online" true-value="1" false-value="0" @on-change="addGoods(row)" >
@@ -83,7 +83,8 @@ export default {
                 {
                     title: '上/下架',
                     key: 'online',
-                    width:120,
+                    width:100,
+                    fixed:'right',
                     // slot:"goodsUpOrDown",
                     render: (h, params) => {  // 重点
                         let _this = this
@@ -105,7 +106,7 @@ export default {
                 {
                     title: '操作',
                     key: 'action',
-                    width: 200,
+                    width: 160,
                     fixed:'right',
                     align: 'center',
                     slot:'action'

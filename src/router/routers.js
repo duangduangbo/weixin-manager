@@ -93,7 +93,7 @@ export default [
         path: 'add_distributor',
         name: 'add_distributor',
         meta: {
-          icon: 'ios-infinite',
+          icon: 'md-person-add',
           title: '添加经销商',
           notCache:true
         },
@@ -103,7 +103,7 @@ export default [
         path: 'update_distributor',
         name: 'update_distributor',
         meta: {
-          icon: 'ios-infinite',
+          icon: 'md-person-add',
           title: '修改经销商',
           hideInMenu:true
         },
@@ -152,7 +152,7 @@ export default [
         path: 'add_goods',
         name: 'add_goods',
         meta: {
-          icon: 'md-person-add',
+          icon: 'md-ionic',
           title: '添加商品'
         },
         component: () => import('@/view/mall/add-goods/add-goods.vue')

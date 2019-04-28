@@ -116,7 +116,7 @@
         </FormItem>
         <FormItem label="图片" prop="picurl">
             <Upload
-                multiple
+                
                 type="drag"
                 :before-upload="beforeUpload"
                 :disabled="disabled"
@@ -127,6 +127,8 @@
                     <img  v-show="imgurl!=''" :src="imgurl" style="height:100px"/>
                     <Icon v-show="imgurl!=''" class="resetimg" @click.prevent="resetImg" type="md-close" />
                 </div>
+                                <Input v-model="formValidate.picurl" style="width: 120px;margin-top:24px;display:none"></Input>
+
             </Upload>
         </FormItem>
         <FormItem>
@@ -203,7 +205,7 @@ export default {
                 }
                 let basic={
                     name: [{ required: true, message: '必填' }],
-                    classId: [{ required: true, message: '必填' }],
+                    classId: [{ required: true, message: '必填',type:"array" }],
                     picurl: [{ required: true, message: '必填' }],
                     inventory: [{ required: true, message: '必填' }],
                     note: [{ required: true, message: '必填' }],
@@ -220,24 +222,24 @@ export default {
                 }
                 if(this.formValidate.type==1){
                     if(this.isAdmin)
-                    return Object.assign(basic,rentValid)
+                    return Object.assign({},basic,rentValid)
                     else
-                    return Object.assign(basic,{
+                    return Object.assign({},basic,{
                         rentPrice: [{ required: true, message: '必填' }],
                         deposit: [{ required: true, message: '必填' }]
                         })
                 }
                 if(this.formValidate.type==2){
                     if(this.isAdmin)
-                    return Object.assign(basic,valid)
+                    return Object.assign({},basic,valid)
                     else
-                    return Object.assign(basic,{price: [{ required: true, message: '必填' }]})
+                    return Object.assign({},basic,{price: [{ required: true, message: '必填' }]})
                 }
                 if(this.formValidate.type==3){
                     if(this.isAdmin)
-                    return Object.assign(basic,rentValid,valid)
+                    return Object.assign({},basic,rentValid,valid)
                     else
-                    return Object.assign(basic,{
+                    return Object.assign({},basic,{
                         price: [{ required: true, message: '必填' }],
                         rentPrice: [{ required: true, message: '必填' }],
                         })
@@ -268,6 +270,7 @@ export default {
             resetImg(){
                 this.imgurl=""
                 this.disabled=false
+                this.formValidate.picurl=""
             },
             getData(){
                 this.getclasslist().then(res=>{
@@ -286,11 +289,11 @@ export default {
                     }
                     console.log(mechanical)
                     this.dataClass=[{
-                    value: '1',
+                    value: 1,
                     label: '园林药剂',
                     children: agentia
                 },{
-                    value: '2',
+                    value: 2,
                     label: '电动机械',
                     children: mechanical
                 }]
@@ -325,7 +328,13 @@ export default {
                 formData.append('online',''); 
             },
             beforeUpload (file) {
-                console.log(file)
+                if((file.size/(1024*1024))>2){
+                    this.$Notice.warning({
+                    title: '文件大小限制',
+                    desc: '文件  ' + file.name + ' 太大，上传不超过2M'
+                });
+                return false;
+                }
                 const reader = new FileReader()
                 // reader.readAsDataURL(file)
                 reader.readAsArrayBuffer(file)

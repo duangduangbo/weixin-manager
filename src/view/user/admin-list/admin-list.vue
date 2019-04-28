@@ -2,8 +2,8 @@
     <div>
         <i-table border  :columns="columns7" :data="data6">
             <template slot-scope="{ row, index }" slot="action">
-            <Button type="primary" size="small" style="margin-right: 5px" @click="show(index)">View</Button>
-            <Button type="error" size="small" @click="remove(index)">Delete</Button>
+            <Button  shape="circle" icon="md-eye" style="margin-right: 5px" @click="show(index)"></Button>
+            <Button  shape="circle" icon="md-trash" @click="remove(index)"></Button>
             </template>
         </i-table>
     </div>

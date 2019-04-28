@@ -7,7 +7,7 @@
             <Col span="8" offset="3">购买数量：{{ data.count }}</Col>
             <Col span="8" offset="3">购买人：{{ data.ownerName }}</Col>
             <Col span="8" offset="3">收货地址：{{ data.addr }}</Col>
-            <Col span="8" offset="3">保证金：{{ data.deposit }}</Col>
+            <Col span="8" offset="3" v-show="isLoan">保证金：{{ data.deposit }}</Col>
             <!-- <Col span="8" offset="3">租赁时间：{{ data.makeOrdertime }}</Col> -->
             <Col span="8" offset="3">经销商：{{ data.distributorID }}</Col>
             <Col span="8" offset="3">订单状态：{{ state[data.status] }}</Col>

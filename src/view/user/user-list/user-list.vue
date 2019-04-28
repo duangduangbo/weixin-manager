@@ -2,9 +2,9 @@
     <div>
         <i-table border  :columns="columns" :data="userdata">
             <template slot-scope="{ row, index }" slot="action">
-            <Button type="primary" size="small" style="margin-right: 5px" @click="show(row)">查看</Button>
+            <Button shape="circle" icon="md-eye" style="margin-right: 5px" @click="show(row)"></Button>
             <!-- <Button type="success" size="small" style="margin-right: 5px" @click="update(row)">修改</Button> -->
-            <Button type="error" size="small" @click="remove(row)">删除</Button>
+            <Button shape="circle" icon="md-trash" @click="remove(row)"></Button>
             </template>
         </i-table>
     </div>
@@ -54,7 +54,7 @@ export default {
                 {
                     title: '操作',
                     key: 'action',
-                    width: 200,
+                    width: 140,
                     fixed:'right',
                     align: 'center',
                     slot:'action'

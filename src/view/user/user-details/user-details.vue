@@ -2,10 +2,10 @@
 
     <div class="user-details">
         <RadioGroup v-show="isUser" v-model="action" type="button" @on-change="actionChange">
-            <Radio label="1">启用</Radio>
-            <Radio label="2">禁用</Radio>
-            <Radio label="3">拉黑</Radio>
-            <Radio label="4">删除</Radio>
+            <Radio :label="1">启用</Radio>
+            <Radio :label="2">禁用</Radio>
+            <Radio :label="3">拉黑</Radio>
+            <Radio :label="4">删除</Radio>
         </RadioGroup>
         <Row class="user-row">
             <Col span="8" offset="3"><strong>用户名：{{ isUser?data.nikeName:data.username }}</strong></Col>
@@ -13,7 +13,8 @@
             <Col span="8" offset="3"><strong>姓名：{{ data.realname }}</strong></Col>
             <Col span="8" offset="3"><strong>电话：{{ data.phone }}</strong></Col>
             <Col span="8" offset="3"><strong>地区：{{ data.province }}{{ data.city }}{{ data.address }}</strong></Col>
-            <Col span="8" offset="3"><strong>订单数：{{ data.totalOrderNum }}</strong></Col>
+            <Col span="8" offset="3"><strong>购买订单数：{{ Number(data.orderNum||0) }}</strong></Col>
+            <Col span="8" offset="3"><strong>租赁订单数：{{ Number(data.rentOrderNum||0) }}</strong></Col>
             <!-- <Col span="8" offset="3" v-show="isUser"><strong>购买记录：{{ data.totalOrderNum }}</strong></Col> -->
             <!-- <Col span="8" offset="3" v-show="!isUser"><strong>返利统计：{{ data.addTime }}</strong></Col> -->
             <Col span="8" offset="3" v-show="!isUser"><strong>店铺名：{{ data.distributorName }}</strong></Col>
@@ -51,6 +52,9 @@ export default {
             this.getupdateuser({
                 one:this.id,
                 two:val
+            }).then(res=>{
+                if(res.code==1)
+                this.$Message.success('Success!');
             })
         },
         getData(){

@@ -25,7 +25,7 @@
                 <p slot="title">园林药剂</p>
                 <i-table border :show-header="false" size="small" :columns="columns" :data="data">
                 <template  slot-scope="{ row, index }"  slot="removeClass">
-                    <Icon shape="circle" type="md-trash" @click="removeType(row)"  style="font-size:18px"/>
+                    <Button shape="circle" icon="md-trash" @click="removeType(row)"  style="font-size:18px"></Button>
                 </template>
                 </i-table>
             </Card>
@@ -35,7 +35,7 @@
                 <p slot="title">电动机械</p>
                 <i-table border :show-header="false" size="small" :columns="columns1" :data="data1">
                 <template  slot-scope="{ row, index }" slot="removeClass1">
-                    <Button shape="circle" icon="md-trash" @click="removeType(row)"></Button>
+                    <Button shape="circle"  style="font-size:18px" icon="md-trash" @click="removeType(row)"></Button>
                 </template>
                 </i-table>
             </Card>

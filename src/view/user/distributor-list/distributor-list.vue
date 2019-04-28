@@ -2,9 +2,9 @@
     <div>
         <i-table border  :columns="columns" :data="data">
             <template slot-scope="{ row, index }" slot="action">
-                <Button type="primary" size="small" style="margin-right: 5px" @click="show(row)">查看</Button>
-                <Button type="success" size="small" style="margin-right: 5px" @click="update(row)">修改</Button>
-                <Button type="error" size="small" style="margin-right: 5px" @click="remove(row)">删除</Button>
+                <Button  shape="circle" icon="md-eye" style="margin-right: 5px" @click="show(row)"></Button>
+                <Button  shape="circle" icon="md-create"  style="margin-right: 5px" @click="update(row)"></Button>
+                <Button  shape="circle" icon="md-trash"  style="margin-right: 5px" @click="remove(row)"></Button>
                 <Button v-show="row.authority==0" type="success" size="small" style="margin-right: 5px" @click="getAuthority(row)">授权</Button>
                 <Button v-show="row.authority==1"  type="error" size="small" @click="removeAuthority(row)">取消授权</Button>
             </template>
@@ -30,9 +30,13 @@ export default {
                                         type: 'md-person'
                                     }
                                 }),
-                                h('strong', params.row.name)
+                                h('strong', params.row.username)
                             ]);
                     }
+                },
+                {
+                    title: '真实姓名',
+                    key: 'realname'
                 },
                 {
                     title: '注册时间',
@@ -82,7 +86,7 @@ export default {
                 {
                     title: '操作',
                     key: 'action',
-                    width: 250,
+                    width: 220,
                     fixed:'right',
                     align: 'center',
                     slot:'action'

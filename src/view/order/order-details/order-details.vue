@@ -1,9 +1,9 @@
 <template>
     <div class="order-details">
         <Row class="order-row">
-            <Col span="8" offset="3">商品名称：{{ data.commodityName }}</Col>
+            <Col span="8" offset="3">商品名称：{{ data.commodityName || data.rentCommodityName}}</Col>
             <Col span="8" offset="3">支付金额：{{ data.payMoney }}</Col>
-            <Col span="8" offset="3">购买日期：{{ data.payOrdertime }}</Col>
+            <Col span="8" offset="3">购买日期：{{ data.makeOrdertime }}</Col>
             <Col span="8" offset="3">购买数量：{{ data.count }}</Col>
             <Col span="8" offset="3">购买人：{{ data.ownerName }}</Col>
             <Col span="8" offset="3">收货地址：{{ data.addr }}</Col>
@@ -41,13 +41,13 @@ export default {
                 
             this.getrentorderparticulars(this.id).then(res=>{
                 this.data=res.data
-                this.data.payOrdertime=getHour24(this.data.payOrdertime)
+                this.data.makeOrdertime=getHour24(this.data.makeOrdertime)
             })
             }else{
                 
             this.getlistpart(this.id).then(res=>{
                 this.data=res.data
-                this.data.payOrdertime=getHour24(this.data.payOrdertime)
+                this.data.makeOrdertime=getHour24(this.data.payOrdertime)
             })
             }
         }

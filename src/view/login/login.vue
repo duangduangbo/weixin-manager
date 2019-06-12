@@ -25,8 +25,8 @@ export default {
     ...mapActions([
       'handleLogin'
     ]),
-    handleSubmit ({ username, password }) {
-      this.handleLogin({ username, password }).then(res => {
+    handleSubmit ({ username, password,isAdmin }) {
+      this.handleLogin({ username, password ,isAdmin}).then(res => {
           this.$router.push({
             name: this.$config.homeName
         })

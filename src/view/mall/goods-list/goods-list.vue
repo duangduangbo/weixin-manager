@@ -6,7 +6,7 @@
                     <Icon type="ios-search" slot="suffix" />
                 </Input>
         </div> -->
-        <i-table border  :columns="columns7" :data="data6">
+        <i-table border  :columns="columns7" :data="data6" :height="tableheight">
             <template slot-scope="{ row, index }" slot="action">
             <Button  shape="circle" icon="md-eye" style="margin-right: 5px" @click="show(row)"></Button>
             <Button  shape="circle" icon="ios-create" style="margin-right: 5px"  @click="update(row)"></Button>
@@ -33,6 +33,7 @@ export default {
     data () {
         return {
             self:null,
+            tableheight:window.innerHeight-140,
             columns7: [
                 {
                     title: '图片',

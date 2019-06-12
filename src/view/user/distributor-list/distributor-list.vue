@@ -1,6 +1,6 @@
 <template>
     <div>
-        <i-table border  :columns="columns" :data="data">
+        <i-table border  :columns="columns" :data="data" :height="tableheight">
             <template slot-scope="{ row, index }" slot="action">
                 <Button  shape="circle" icon="md-eye" style="margin-right: 5px" @click="show(row)"></Button>
                 <Button  shape="circle" icon="md-create"  style="margin-right: 5px" @click="update(row)"></Button>
@@ -19,6 +19,7 @@ export default {
     data () {
         return {
             self:null,
+            tableheight:window.innerHeight-140,
             columns: [
                 {
                     title: '用户名',

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <i-table border  :columns="columns" :data="userdata">
+        <i-table border  :columns="columns" :data="userdata" :height="tableheight">
             <template slot-scope="{ row, index }" slot="action">
             <Button shape="circle" icon="md-eye" style="margin-right: 5px" @click="show(row)"></Button>
             <!-- <Button type="success" size="small" style="margin-right: 5px" @click="update(row)">修改</Button> -->
@@ -10,118 +10,115 @@
     </div>
 </template>
 <script>
-import {mapActions} from 'vuex'
-import { getHour24 } from '@/libs/util'
+import { mapActions } from "vuex";
+import { getHour24 } from "@/libs/util";
 export default {
-    name:"user_list",
-    data () {
-        return {
-            self:null,
-            columns: [
-                {
-                    title: '用户名',
-                    key: 'nikeName',
-                    render (h,params) {
-                        return h('div', [
-                                h('Icon', {
-                                    props: {
-                                        type: 'md-person'
-                                    }
-                                }),
-                                h('strong', params.row.nikeName)
-                            ]);
-                    }
-                },
-                {
-                    title: '注册时间',
-                    key: 'addTime',
-                    render (h,params) {
-                        return h('div', getHour24(params.row.addTime));
-                    }
-                },
-                {
-                    title: '地区',
-                    key: 'alladdress'
-                },
-                 {
-                    title: '订单数',
-                    key: 'totalOrderNum'
-                },
-                 {
-                    title: '归属经销商',
-                    key: 'distributor'
-                },
-                {
-                    title: '操作',
-                    key: 'action',
-                    width: 140,
-                    fixed:'right',
-                    align: 'center',
-                    slot:'action'
+  name: "user_list",
+  data() {
+    return {
+      self: null,
+      tableheight: window.innerHeight - 140,
+      columns: [
+        {
+          title: "用户名",
+          key: "nikeName",
+          render(h, params) {
+            return h("div", [
+              h("Icon", {
+                props: {
+                  type: "md-person"
                 }
-            ],
-            userdata:[]
+              }),
+              h("strong", params.row.nikeName)
+            ]);
+          }
+        },
+        {
+          title: "注册时间",
+          key: "addTime",
+          render(h, params) {
+            return h("span", getHour24(params.row.addTime));
+          }
+        },
+        {
+          title: "地区",
+          key: "alladdress"
+        },
+        {
+          title: "订单数",
+          key: "totalOrderNum"
+        },
+        {
+          title: "归属经销商",
+          key: "distributor"
+        },
+        {
+          title: "操作",
+          key: "action",
+          width: 160,
+          // fixed:'right',
+          align: "center",
+          slot: "action"
         }
-    },
-    created(){
-        this.self=this;
-        console.log(this.self)
-    },
-    mounted(){
-        this.getUserList()
-    },
-    methods: {
-        ...mapActions([
-            'getlistuser',
-            'getremoveuser'
-        ]),
-        getUserList(){
-            this.getlistuser().then(res=>{
-                if(res.data){
+      ],
+      userdata: []
+    };
+  },
+  created() {
+    this.self = this;
+    console.log(this.self);
+  },
+  mounted() {
+    this.getUserList();
+  },
+  methods: {
+    ...mapActions(["getlistuser", "getremoveuser"]),
+    getUserList() {
+      this.getlistuser().then(res => {
+        if (res.data) {
+          for (let i = 0; i < res.data.length; i++) {
+            res.data[i].alladdress =
+              (res.data[i].province || "") +
+              (res.data[i].city || "") +
+              (res.data[i].address || "");
+          }
+        }
 
-                for(let i=0;i<res.data.length;i++){
-                    res.data[i].alladdress = (res.data[i].province||'')
-                                            + (res.data[i].city||'') 
-                                            + (res.data[i].address||'')
-                }
-                }
-                
-                this.userdata = res.data||[]
-            })
+        this.userdata = res.data || [];
+      });
+    },
+    show(row) {
+      this.$router.push({
+        path: "user_details",
+        name: "user_details",
+        query: {
+          id: row.id,
+          isUser: true
         },
-        show (row) {
-            this.$router.push({
-                path:'user_details',
-                name:'user_details',
-                query:{
-                    id:row.id,
-                    isUser:true
-                },
-                params:{
-                    data:row,
-                }
-            })
-        },
-        remove (row) {
-            this.getremoveuser(row.id).then(res=>{
-                if(res.code==1){
-                    this.getUserList()
-                    this.$Message.success('Success!');
-                }
-            })
-        },
-        update(row){
-            this.$router.push({
-                path:"add_distributor",
-                query:{
-                    id:row.id
-                }
-            })
+        params: {
+          data: row
         }
+      });
+    },
+    remove(row) {
+      this.getremoveuser(row.id).then(res => {
+        if (res.code == 1) {
+          this.getUserList();
+          this.$Message.success("Success!");
+        }
+      });
+    },
+    update(row) {
+      this.$router.push({
+        path: "add_distributor",
+        query: {
+          id: row.id
+        }
+      });
     }
-}
+  }
+};
 </script>
 
 <style lang="less" scoped>
-
 </style>

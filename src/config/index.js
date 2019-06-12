@@ -2,7 +2,7 @@ export default {
   /**
    * @description 配置显示在浏览器标签的title
    */
-  title: '51商城后台',
+  title: '51养护商城后台',
   /**
    * @description token在Cookie中存储的天数，默认1天
    */
@@ -17,8 +17,8 @@ export default {
    * @description api请求基础路径
    */
   baseUrl: {
-    dev: 'http://192.168.59.1:8888/',
-    pro: 'http://192.168.59.1:8888/'
+    dev: 'http://47.244.194.178:8080/',//线下
+    pro: 'http://47.244.194.178:8080/'
   },
   /**
    * @description 默认打开的首页的路由name值，默认为home

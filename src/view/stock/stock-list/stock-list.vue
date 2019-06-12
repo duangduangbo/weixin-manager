@@ -18,13 +18,13 @@ export default {
                     title: '商品',
                     key: 'name'
                 },
-                // {
-                //     title: '上架时间',
-                //     key: 'age',
-                //     render: (h, params) => {
-                //             return h('div', getHour24(params.row.address2))
-                //         }
-                // },
+                {
+                    title: '上架时间',
+                    key: 'onlineTime',
+                    render: (h, params) => {
+                            return h('div', getHour24(params.row.onlineTime))
+                        }
+                },
                 {
                     title: '归属经销商',
                     key: 'distributor'

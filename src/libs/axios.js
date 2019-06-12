@@ -1,6 +1,7 @@
 import axios from 'axios'
 import store from '@/store'
-import {Message} from 'iview'
+import {Message,Modal} from 'iview'
+import { setToken, getToken } from './util'
 // import { Spin } from 'iview'
 const addErrorLog = errorInfo => {
   const { statusText, status, request: { responseURL } } = errorInfo
@@ -50,14 +51,30 @@ class HttpRequest {
     instance.interceptors.response.use(res => {
       this.destroy(url)
       const { data, status } = res
+      
       if(data.code>=1){
         return { data, status }
       }else if(data.code<1){
-        Message.warning({
-          content: data.msg,
-          duration: 10,
-          closable: true
-        });
+        if(data.code==-4){
+          Modal.warning({
+            title:"提示",
+            content: "登录过期，请重新登录",
+            duration: 10,
+            width:"300",
+            okText:"去登录",
+            onOk:()=>{
+              setToken("")
+              window.location.href='/admin'
+            }
+          });
+        }else{
+          Message.warning({
+            content: data.msg,
+            duration: 10,
+            closable: true
+          });
+        }
+        return false
       }
     }, error => {
       this.destroy(url)

@@ -54,7 +54,7 @@ export default [
     path: '/user',
     name: 'user',
     meta: {
-      icon: 'logo-buffer',
+      icon: 'md-person',
       title: '用户管理',
     },
     component: Main,
@@ -84,7 +84,7 @@ export default [
         path: 'user_list',
         name: 'user_list',
         meta: {
-          icon: 'md-list',
+          icon: 'md-people',
           title: '用户列表'
         },
         component: () => import('@/view/user/user-list/user-list.vue')
@@ -95,7 +95,8 @@ export default [
         meta: {
           icon: 'md-person-add',
           title: '添加经销商',
-          notCache:true
+          notCache:true,
+          access: ['admin'],
         },
         component: () => import('@/view/user/add-distributor/add-distributor.vue')
       },
@@ -105,7 +106,8 @@ export default [
         meta: {
           icon: 'md-person-add',
           title: '修改经销商',
-          hideInMenu:true
+          hideInMenu:true,
+          access: ['admin'],
         },
         component: () => import('@/view/user/add-distributor/add-distributor.vue')
       },
@@ -114,7 +116,8 @@ export default [
         name: 'distributor_list',
         meta: {
           icon: 'md-list',
-          title: '经销商列表'
+          title: '经销商列表',
+          access: ['admin'],
         },
         component: () => import('@/view/user/distributor-list/distributor-list.vue')
       },
@@ -134,7 +137,7 @@ export default [
     path: '/mall',
     name: 'mall',
     meta: {
-      icon: 'logo-buffer',
+      icon: 'md-appstore',
       title: '商城管理'
     },
     component: Main,
@@ -144,10 +147,22 @@ export default [
         name: 'goods_list',
         meta: {
           icon: 'md-trending-up',
-          title: '商品列表'
+          title: '商品列表',
+          
         },
         component: () => import('@/view/mall/goods-list/goods-list.vue')
       },
+      {
+        path: 'goods_sales',
+        name: 'goods_sales',
+        meta: {
+          icon: 'md-trending-up',
+          title: '商品销售情况',
+          access: ['admin'],
+        },
+        component: () => import('@/view/mall/goods-sales/goods-sales.vue')
+      },
+      
       {
         path: 'add_goods',
         name: 'add_goods',
@@ -193,7 +208,7 @@ export default [
         meta: {
           icon: 'ios-infinite',
           title: '商品分类',
-          // access: ['distributor'],
+          access: ['admin'],
         },
         component: () => import('@/view/mall/goods-type/goods-type.vue')
       }
@@ -203,7 +218,7 @@ export default [
     path: '/order',
     name: 'order',
     meta: {
-      icon: 'logo-buffer',
+      icon: 'md-bookmarks',
       title: '订单'
     },
     component: Main,
@@ -212,7 +227,7 @@ export default [
         path: 'sell_order',
         name: 'sell_order',
         meta: {
-          icon: 'md-list',
+          icon: 'md-exit',
           title: '出售订单'
         },
         component: () => import('@/view/order/sell-order/sell-order.vue')
@@ -221,7 +236,7 @@ export default [
         path: 'loan_order',
         name: 'loan_order',
         meta: {
-          icon: 'md-trending-up',
+          icon: 'md-clipboard',
           title: '租赁订单'
         },
         component: () => import('@/view/order/loan-order/loan-order.vue')
@@ -231,7 +246,7 @@ export default [
         name: 'handle_order',
         meta: {
           notCache: true,
-          icon: 'ios-infinite',
+          icon: 'md-exit',
           title: '出售订单处理'
         },
         component: () => import('@/view/order/handle-order/handle-order.vue')
@@ -240,7 +255,7 @@ export default [
         path: 'handle_rentorder',
         name: 'handle_rentorder',
         meta: {
-          icon: 'ios-infinite',
+          icon: 'md-clipboard',
           title: '租赁订单处理'
         },
         component: () => import('@/view/order/handle-rentorder/handle-rentorder.vue')

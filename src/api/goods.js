@@ -121,3 +121,11 @@ export const commodityupdate = (p) => {
     }
   })
 }
+// /admin/commodity/getSalesTabel		
+export const getSalesTabel = (p) => {
+  return axios.request({
+    url: 'admin/commodity/getSalesTabel',
+    method: 'post',
+    data:p
+  })
+}

@@ -10,7 +10,8 @@ import {
   commodityparticulars,
   commodityonline,
   commoditydownline,
-  commodityupdate
+  commodityupdate,
+  getSalesTabel
 } from '@/api/goods'
 import { setToken, getToken } from '@/libs/util'
 
@@ -166,6 +167,18 @@ export default {
       // p={userToken:getToken()}
       return new Promise((resolve, reject) => {
         commodityupdate(p).then((res) => {
+          let data=res.data
+          resolve(data)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // getSalesTabel
+    getSalesTabel({ state, commit },p) {
+      p={userToken:getToken()}
+      return new Promise((resolve, reject) => {
+        getSalesTabel(p).then((res) => {
           let data=res.data
           resolve(data)
         }).catch(error => {

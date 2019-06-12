@@ -14,6 +14,12 @@
         </span>
       </Input>
     </FormItem>
+    <FormItem prop="isAdmin">
+      <RadioGroup v-model="form.isAdmin">
+        <Radio :label="1">管理员</Radio>
+        <Radio :label="2">商家</Radio>
+    </RadioGroup>
+    </FormItem>
     <FormItem>
       <Button @click="handleSubmit" type="primary" long>登录</Button>
     </FormItem>
@@ -44,7 +50,8 @@ export default {
     return {
       form: {
         username: '',
-        password: ''
+        password: '',
+        isAdmin:1
       }
     }
   },
@@ -62,7 +69,8 @@ export default {
         if (valid) {
           this.$emit('on-success-valid', {
             username: this.form.username,
-            password: this.form.password
+            password: this.form.password,
+            isAdmin:this.form.isAdmin
           })
         }
       })

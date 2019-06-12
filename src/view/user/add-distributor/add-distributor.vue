@@ -63,7 +63,7 @@
             </Select>
         </FormItem>
         <FormItem label="上级经销商" prop="parent">
-            <Select v-model="formValidate.parent" placeholder="请选择上级经销商...">
+            <Select v-model="formValidate.parent" placeholder="请先选择经销商等级...">
                 <Option v-for="(v,k) in parentList" :key="k" :value="v.id">{{v.name}}</Option>
             </Select>
         </FormItem>

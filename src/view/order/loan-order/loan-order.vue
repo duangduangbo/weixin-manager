@@ -20,13 +20,13 @@ export default {
             columns: [
                 {
                     title: '商品名称',
-                    key: 'commodityName'
+                    key: 'rentCommodityName'
                 },
                 {
                     title: '日期',
-                    key: 'payOrdertime',
+                    key: 'makeOrdertime',
                     render(h,params){
-                        return h('div',getHour24(params.row.payOrdertime))
+                        return h('div',getHour24(params.row.makeOrdertime))
                     }
                 },
                 {

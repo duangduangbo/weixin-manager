@@ -41,7 +41,7 @@
                     </FormItem>
                 </Col>
                 <Col :sm="12" :lg="12" v-show="isAdmin">
-                   <FormItem label="购买价格1" prop="price5">
+                   <FormItem label="购买价格5" prop="price5">
                         <Input v-model="formValidate.price5"></Input>
                     </FormItem>
                 </Col>
@@ -82,7 +82,7 @@
                     </FormItem>
                 </Col>
                 <Col :sm="12" :lg="12" v-show="isAdmin">
-                   <FormItem label="租赁价格1" prop="rentPrice5">
+                   <FormItem label="租赁价格5" prop="rentPrice5">
                         <Input v-model="formValidate.rentPrice5"></Input>
                     </FormItem>
                 </Col>
@@ -170,45 +170,37 @@ export default {
                 isAdmin:this.$store.state.admin.isAdmin,
                 id:this.$route.query.id,
                 valid:{
-                    price: [{ required: true, message: '必填', trigger: 'blur' }],
-                    price1: [{ required: true, message: '必填', trigger: 'blur' }],
-                    price2: [{ required: true, message: '必填', trigger: 'blur' }],
-                    price3: [{ required: true, message: '必填', trigger: 'blur' }],
-                    price4: [{ required: true, message: '必填', trigger: 'blur' }],
-                    price5: [{ required: true, message: '必填', trigger: 'blur' }],
-                    price6: [{ required: true, message: '必填', trigger: 'blur' }],
+                    price: [{ required: true, message: '必填' }],
+                    price1: [{ required: true, message: '必填' }],
+                    price2: [{ required: true, message: '必填' }],
+                    price3: [{ required: true, message: '必填' }],
+                    price4: [{ required: true, message: '必填' }],
+                    price5: [{ required: true, message: '必填' }],
+                    price6: [{ required: true, message: '必填' }],
                 },
                 basic:{
-                    name: [{ required: true, message: '必填', trigger: 'blur' }],
-                    classId: [{ required: true, message: '必填', trigger: 'blur',type:"array" }],
+                    name: [{ required: true, message: '必填' }],
+                    classId: [{ required: true, message: '必填', type:"array" }],
                     picurl: [{ required: true, message: '必填' }],
-                    inventory: [{ required: true, message: '必填', trigger: 'blur' }],
-                    note: [{ required: true, message: '必填', trigger: 'blur' }],
+                    inventory: [{ required: true, message: '必填' }],
+                    note: [{ required: true, message: '必填' }],
                 },
                  rentValid:{
-                    deposit: [{ required: true, message: '必填', trigger: 'blur' }],
-                     rentPrice: [{ required: true, message: '必填', trigger: 'blur' }],
-                    rentPrice1: [{ required: true, message: '必填', trigger: 'blur' }],
-                    rentPrice2: [{ required: true, message: '必填', trigger: 'blur' }],
-                    rentPrice3: [{ required: true, message: '必填', trigger: 'blur' }],
-                    rentPrice4: [{ required: true, message: '必填', trigger: 'blur' }],
-                    rentPrice5: [{ required: true, message: '必填', trigger: 'blur' }],
-                  rentPrice6: [{ required: true, message: '必填', trigger: 'blur' }],
+                    deposit: [{ required: true, message: '必填' }],
+                     rentPrice: [{ required: true, message: '必填' }],
+                    rentPrice1: [{ required: true, message: '必填' }],
+                    rentPrice2: [{ required: true, message: '必填' }],
+                    rentPrice3: [{ required: true, message: '必填' }],
+                    rentPrice4: [{ required: true, message: '必填' }],
+                    rentPrice5: [{ required: true, message: '必填' }],
+                  rentPrice6: [{ required: true, message: '必填' }],
                 }
             }
         },
         mounted(){
             this.getData()
-            if(this.id!=null&this.id!=undefined)
-            this.getGoods()
-            else{
+            
             this.setForm()
-                this.formValidate={
-                    type:'1',
-                    classId:[],
-                    online:"1"
-                }
-            }
         },
         computed:{
             ruleValidate(){
@@ -217,23 +209,23 @@ export default {
                     return Object.assign({},this.basic,this.rentValid)
                     else
                     return Object.assign({},this.basic,{
-                        rentPrice: [{ required: true, message: '必填', trigger: 'blur' }],
-                        deposit: [{ required: true, message: '必填', trigger: 'blur' }]
+                        rentPrice: [{ required: true, message: '必填' }],
+                        deposit: [{ required: true, message: '必填' }]
                         })
                 }
                 if(this.formValidate.type==2){
                     if(this.isAdmin)
                     return Object.assign({},this.basic,this.valid)
                     else
-                    return Object.assign({},this.basic,{price: [{ required: true, message: '必填', trigger: 'blur' }]})
+                    return Object.assign({},this.basic,{price: [{ required: true, message: '必填' }]})
                 }
                 if(this.formValidate.type==3){
                     if(this.isAdmin)
                     return Object.assign({},this.basic,this.rentValid,this.valid)
                     else
                     return Object.assign({},this.basic,{
-                        price: [{ required: true, message: '必填', trigger: 'blur' }],
-                        rentPrice: [{ required: true, message: '必填', trigger: 'blur' }],
+                        price: [{ required: true, message: '必填' }],
+                        rentPrice: [{ required: true, message: '必填' }],
                         })
                 }
             },
@@ -259,20 +251,6 @@ export default {
                     title: '图片格式不正确',
                     desc: '文件' + file.name + '格式不正确，请选择jpg，png，jpeg.'
                 });
-            },
-            getGoods(){
-                this.getcommodityparticulars(this.id).then(res=>{
-                    if(res.data){
-                            
-                        this.formValidate=res.data
-                        this.formValidate.classId=[res.data.classId]
-                        // if(res.data.online==1)
-                        // this.formValidate.online=[res.data.online]
-                        // else
-                        // this.formValidate.online=[]
-                        this.imgurl=res.data.picurl
-                    }
-                })
             },
             resetImg(){
                 this.imgurl=""
@@ -315,22 +293,26 @@ export default {
                 formData.append('note','');
                 if(this.formValidate.type==2||this.formValidate.type==3){
                     formData.append('price',''); 
-                    formData.append('price1',''); 
-                    formData.append('price2',''); 
-                    formData.append('price3',''); 
-                    formData.append('price4',''); 
-                    formData.append('price5',''); 
-                    formData.append('price6',''); 
+                    if(this.isAdmin){
+                        formData.append('price1',''); 
+                        formData.append('price2',''); 
+                        formData.append('price3',''); 
+                        formData.append('price4',''); 
+                        formData.append('price5',''); 
+                        formData.append('price6',''); 
+                    }
                 }
                 if(this.formValidate.type==1||this.formValidate.type==3){
                 formData.append('deposit',''); 
                 formData.append('rentPrice',''); 
-                formData.append('rentPrice1',''); 
-                formData.append('rentPrice2',''); 
-                formData.append('rentPrice3',''); 
-                formData.append('rentPrice4',''); 
-                formData.append('rentPrice5',''); 
-                formData.append('rentPrice6',''); 
+                 if(this.isAdmin){
+                    formData.append('rentPrice1',''); 
+                    formData.append('rentPrice2',''); 
+                    formData.append('rentPrice3',''); 
+                    formData.append('rentPrice4',''); 
+                    formData.append('rentPrice5',''); 
+                    formData.append('rentPrice6','');
+                 } 
                 } 
                 formData.append('inventory',''); 
                 formData.append('classId',''); 
@@ -375,21 +357,25 @@ export default {
                         if(this.formValidate.type==2||this.formValidate.type==3){
                         
                             formData.set('price',this.formValidate.price); 
-                            formData.set('price1',this.formValidate.price1); 
-                            formData.set('price2',this.formValidate.price2); 
-                            formData.set('price3',this.formValidate.price3); 
-                            formData.set('price4',this.formValidate.price4); 
-                            formData.set('price5',this.formValidate.price5); 
-                            formData.set('price6',this.formValidate.price6); 
+                            if(this.isAdmin){
+                                formData.set('price1',this.formValidate.price1); 
+                                formData.set('price2',this.formValidate.price2); 
+                                formData.set('price3',this.formValidate.price3); 
+                                formData.set('price4',this.formValidate.price4); 
+                                formData.set('price5',this.formValidate.price5); 
+                                formData.set('price6',this.formValidate.price6); 
+                            }
                         } 
                         if(this.formValidate.type==1||this.formValidate.type==3){
                             formData.set('rentPrice',this.formValidate.rentPrice); 
-                            formData.set('rentPrice1',this.formValidate.rentPrice1); 
-                            formData.set('rentPrice2',this.formValidate.rentPrice2); 
-                            formData.set('rentPrice3',this.formValidate.rentPrice3); 
-                            formData.set('rentPrice4',this.formValidate.rentPrice4); 
-                            formData.set('rentPrice5',this.formValidate.rentPrice5); 
-                            formData.set('rentPrice6',this.formValidate.rentPrice6); 
+                            if(this.isAdmin){
+                                formData.set('rentPrice1',this.formValidate.rentPrice1); 
+                                formData.set('rentPrice2',this.formValidate.rentPrice2); 
+                                formData.set('rentPrice3',this.formValidate.rentPrice3); 
+                                formData.set('rentPrice4',this.formValidate.rentPrice4); 
+                                formData.set('rentPrice5',this.formValidate.rentPrice5); 
+                                formData.set('rentPrice6',this.formValidate.rentPrice6); 
+                            }
                         } 
                         formData.set('classId',this.formValidate.classId[1]); 
                         formData.set('online',this.formValidate.online);  

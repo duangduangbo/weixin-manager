@@ -94,13 +94,13 @@ export default {
   },
   actions: {
     // 登录
-    handleLogin ({ commit }, { username, password,ip=1 }) {
-      let Test={name:1,age:1}
+    handleLogin ({ commit }, { username, password,isAdmin,ip=1 }) {
       return new Promise((resolve, reject) => {
         login({
           username,
           password,
-          ip
+          ip,
+          isAdmin
         }).then(res => {
           const data = res.data.data
           commit('setToken', data.userToken)
@@ -113,10 +113,11 @@ export default {
             type=['admin','distributor']
             isAdmin=1
           }else{
-            type=['admin']
+            type=['distributor']
             isAdmin=0
           }
           commit('setUserType', type)
+          commit('setAccess', type)
           commit('setIsAdmin', isAdmin)
           resolve()
         }).catch(err => {

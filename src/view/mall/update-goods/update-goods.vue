@@ -169,17 +169,7 @@ export default {
             console.log(this.isAdmin,this.$store.state.admin.isAdmin)
         },
         mounted(){
-            // if(this.id!=null&this.id!=undefined)
             this.getData()
-           
-            // else{
-            // this.setForm()
-            // this.formValidate={
-            //     type:'1',
-            //     classId:[],
-            //     online:"1"
-            // }
-            // }
         },
         watch:{
         id:{
@@ -300,32 +290,6 @@ export default {
                 // mechanical agentia
                  this.getGoods()
                 })
-            },
-            setForm(){
-                formData.append('pic',''); 
-                formData.append('id',this.id); 
-                formData.append('userToken',getToken()); 
-                formData.append('name',''); 
-                formData.append('type',''); 
-                formData.append('note',''); 
-                formData.append('deposit',''); 
-                formData.append('inventory',''); 
-                formData.append('price',''); 
-                formData.append('price1',''); 
-                formData.append('price2',''); 
-                formData.append('price3',''); 
-                formData.append('price4',''); 
-                formData.append('price5',''); 
-                formData.append('price6',''); 
-                formData.append('rentPrice',''); 
-                formData.append('rentPrice1',''); 
-                formData.append('rentPrice2',''); 
-                formData.append('rentPrice3',''); 
-                formData.append('rentPrice4',''); 
-                formData.append('rentPrice5',''); 
-                formData.append('rentPrice6',''); 
-                formData.append('classId',''); 
-                formData.append('online',''); 
             },
             beforeUpload (file) {
                 if((file.size/(1024*1024))>2){

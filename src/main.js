@@ -13,10 +13,10 @@ import installPlugin from '@/plugin'
 import './index.less'
 // import '@/assets/icons/iconfont.css'
 import 'iview/dist/styles/iview.css'
-import TreeTable from 'tree-table-vue'
-import VOrgTree from 'v-org-tree'
+// import TreeTable from 'tree-table-vue'
+// import VOrgTree from 'v-org-tree'
 import 'v-org-tree/dist/v-org-tree.css'
-
+import 'babel-polyfill'
 // var history =  require('connect-history-api-fallback')
 
 // var express =  require('express')
@@ -28,8 +28,8 @@ if (process.env.NODE_ENV !== 'production') require('@/mock')
 Vue.use(iView, {
   i18n: (key, value) => i18n.t(key, value)
 })
-Vue.use(TreeTable)
-Vue.use(VOrgTree)
+// Vue.use(TreeTable)
+// Vue.use(VOrgTree)
 /**
  * @description 注册admin内置插件
  */
